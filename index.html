@@ -1,0 +1,1256 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Up Car - Oficina Mecânica</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Lucide Icons CDN -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <style>
+        /* General Body and App Container Styles */
+        body {
+            font-family: "Inter", sans-serif;
+            background-color: #f8fafc; /* Very light gray for background */
+            display: flex;
+            justify-content: center;
+            align-items: flex-start; /* Align to top for better content display */
+            min-height: 100vh;
+            padding: 24px; /* More padding around the app */
+            box-sizing: border-box;
+        }
+        #app {
+            background-color: #ffffff; /* Clean white background */
+            border-radius: 20px; /* Even more rounded corners for a softer look */
+            box-shadow: 0 15px 40px rgba(0, 0, 0, 0.08); /* More pronounced, soft shadow */
+            width: 100%;
+            max-width: 1000px; /* Slightly wider app container */
+            display: flex;
+            flex-direction: column;
+            overflow: hidden; /* Hide overflow for rounded corners */
+            animation: fadeIn 0.8s ease-out; /* Fade-in animation for the app */
+        }
+
+        /* Keyframe for fade-in animation */
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* Header Styles */
+        .header {
+            background-image: url('https://i.ibb.co/g2B7wSR/IMG-20250607-WA0098.jpg'); /* Background image from user */
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+            color: white;
+            padding: 30px; /* Increased padding for header */
+            text-align: center;
+            border-top-left-radius: 20px;
+            border-top-right-radius: 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center; /* Center content vertically */
+            gap: 15px; /* More space between logo and text */
+            position: relative;
+            min-height: 200px; /* Taller header */
+            overflow: hidden; /* Ensure content stays within rounded corners */
+        }
+        .header::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: rgba(0, 0, 0, 0.45); /* Darker overlay for better text readability */
+            border-top-left-radius: 20px;
+            border-top-right-radius: 20px;
+            z-index: 1;
+        }
+        .header > * {
+            position: relative;
+            z-index: 2;
+        }
+        .header h1 {
+            font-size: 3.5rem; /* Larger title */
+            font-weight: 700; /* Bolder */
+            letter-spacing: -0.05em; /* Tighter letter spacing */
+            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+        }
+        .header p {
+            font-size: 1.5rem; /* Larger slogan */
+            font-weight: 400;
+            text-shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
+            margin-top: -5px; /* Adjust spacing */
+        }
+        .header img {
+            border-radius: 50%; /* Perfect circle */
+            border: 4px solid #ffffff; /* Thicker white border */
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2); /* Soft shadow for logo */
+            transition: transform 0.3s ease;
+        }
+        .header img:hover {
+            transform: scale(1.05); /* Slight scale on hover */
+        }
+
+        /* Navigation Styles (Modern Tabs) */
+        .nav-container {
+            background-color: #e0e7ff; /* Lighter blue for nav background */
+            display: flex;
+            justify-content: center; /* Center tabs */
+            padding: 10px 0; /* Vertical padding */
+            border-bottom: none; /* Remove default border */
+            border-radius: 0 0 20px 20px; /* Rounded bottom if it's part of the main app card */
+            box-shadow: inset 0 -3px 8px rgba(0, 0, 0, 0.05); /* Subtle inner shadow */
+            flex-wrap: wrap; /* Allow wrapping on small screens */
+            gap: 8px; /* Space between buttons */
+            padding: 10px 20px;
+        }
+        .nav-button {
+            padding: 12px 25px; /* More padding for larger touch targets */
+            cursor: pointer;
+            border-radius: 12px; /* Rounded pills */
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 10px; /* Space between icon and text */
+            font-weight: 600;
+            color: #4a5568; /* Darker text for inactive */
+            background-color: transparent; /* Transparent default */
+            border: none; /* No border */
+        }
+        .nav-button.active {
+            background-color: #1a73e8; /* Vibrant blue for active */
+            color: white; /* White text for active */
+            box-shadow: 0 4px 10px rgba(26, 115, 232, 0.3); /* Soft shadow for active tab */
+            transform: translateY(-2px); /* Slight lift */
+        }
+        .nav-button:hover:not(.active) {
+            background-color: #d1e2ff; /* Lighter blue on hover */
+            color: #1a73e8; /* Blue text on hover */
+            transform: translateY(-2px);
+        }
+        .nav-button:active {
+            transform: translateY(0); /* Press effect */
+        }
+
+        /* Section Content General Styles */
+        .section-content {
+            padding: 40px; /* Increased padding for content */
+            display: none;
+            flex-grow: 1;
+            color: #334155; /* Darker gray for general text */
+        }
+        .section-content.active {
+            display: block;
+        }
+        .section-content h2 {
+            font-size: 2.5rem; /* Larger section titles */
+            font-weight: 700;
+            color: #2d3748; /* Even darker title */
+            margin-bottom: 25px;
+            border-bottom: 2px solid #e2e8f0; /* Subtle underline */
+            padding-bottom: 10px;
+        }
+        .section-content p {
+            line-height: 1.7; /* Better readability */
+            margin-bottom: 15px;
+        }
+
+        /* Form Styles */
+        .form-label {
+            display: block;
+            margin-bottom: 10px;
+            font-weight: 600;
+            color: #2d3748; /* Darker label text */
+            font-size: 1.1rem;
+        }
+        .form-input, .form-textarea, .form-select {
+            width: 100%;
+            padding: 14px 18px; /* More padding in inputs */
+            margin-bottom: 25px; /* More space below inputs */
+            border: 2px solid #e2e8f0; /* Slightly thicker, subtle border */
+            border-radius: 10px; /* More rounded inputs */
+            box-sizing: border-box;
+            font-size: 17px; /* Slightly larger font in inputs */
+            color: #334155;
+            transition: border-color 0.3s ease, box-shadow 0.3s ease;
+            background-color: #fdfdfe; /* Almost white input background */
+        }
+        .form-input:focus, .form-textarea:focus, .form-select:focus {
+            outline: none;
+            border-color: #1a73e8;
+            box-shadow: 0 0 0 4px rgba(26, 115, 232, 0.25); /* Stronger focus ring */
+        }
+        .form-textarea {
+            resize: vertical; /* Allow vertical resizing */
+        }
+        .form-container {
+            background-color: #f8faff; /* Lighter background for forms */
+            padding: 30px;
+            border-radius: 16px;
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.06); /* Soft inner shadow */
+        }
+
+        /* Button Styles */
+        .submit-button, .llm-button, .action-button {
+            padding: 14px 30px; /* Larger buttons */
+            border: none;
+            border-radius: 10px; /* Rounded buttons */
+            font-size: 1.15rem; /* Larger font size for buttons */
+            font-weight: 700; /* Bolder text */
+            transition: background-color 0.3s ease, transform 0.2s ease, box-shadow 0.3s ease;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1); /* Default shadow */
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px; /* Space between icon and text */
+            cursor: pointer;
+        }
+        .submit-button {
+            background-color: #1a73e8; /* Blue primary button */
+            color: white;
+        }
+        .submit-button:hover {
+            background-color: #155bbf;
+            transform: translateY(-2px);
+            box-shadow: 0 6px 16px rgba(0, 0, 0, 0.15);
+        }
+        .submit-button:active {
+            transform: translateY(0);
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        .llm-button.bg-purple-600 {
+            background-color: #8a2be2; /* Darker violet */
+            color: white;
+        }
+        .llm-button.bg-purple-600:hover {
+            background-color: #6a0fd1;
+        }
+        .llm-button.bg-orange-600 {
+            background-color: #f7931e; /* Vibrant orange */
+            color: white;
+        }
+        .llm-button.bg-orange-600:hover {
+            background-color: #d87e14;
+        }
+        .llm-button.bg-green-600 {
+            background-color: #34d399; /* Emerald green */
+            color: #2d3748; /* Darker text for green button */
+        }
+        .llm-button.bg-green-600:hover {
+            background-color: #10b981;
+            color: white;
+        }
+        .action-button {
+            background-color: #60a5fa; /* Light blue for action buttons */
+            color: white;
+            font-size: 0.9rem; /* Smaller font for action buttons */
+            padding: 8px 15px; /* Smaller padding */
+            border-radius: 8px;
+            box-shadow: none; /* No shadow by default */
+        }
+        .action-button:hover {
+            background-color: #3b82f6;
+            transform: translateY(-1px);
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        }
+
+        /* Data List and Items */
+        .data-list {
+            margin-top: 40px;
+            border-top: 1px solid #e2e8f0;
+            padding-top: 30px;
+        }
+        .data-item {
+            background-color: #fdfdfe; /* Almost white for list items */
+            border: 1px solid #edf2f7; /* Very subtle border */
+            border-radius: 12px; /* Rounded item cards */
+            padding: 20px 25px; /* More padding */
+            margin-bottom: 20px; /* More space between items */
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05); /* Soft shadow */
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+        }
+        .data-item:hover {
+            transform: translateY(-3px); /* Lift effect on hover */
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.08);
+        }
+        .data-item strong {
+            color: #2d3748; /* Darker strong text */
+        }
+        .data-item p {
+            margin-bottom: 5px;
+            font-size: 0.95rem;
+            color: #556277;
+        }
+        .data-item h4 {
+            font-size: 1.4rem; /* Larger title for news posts */
+            margin-bottom: 8px;
+            color: #2d3748;
+        }
+        .data-item .text-sm {
+            font-size: 0.85rem;
+            color: #718096;
+        }
+
+        /* No Data Message */
+        .no-data-message {
+            text-align: center;
+            color: #718096;
+            padding: 30px;
+            background-color: #f0f4f8; /* Light blue-gray for message box */
+            border-radius: 12px;
+            font-size: 1.1rem;
+            font-style: italic;
+        }
+
+        /* LLM Response and Loading */
+        .llm-response {
+            background-color: #e3f2fd; /* Lighter blue for LLM response */
+            border: 1px solid #90caf9;
+            border-radius: 10px;
+            padding: 20px;
+            margin-top: 25px;
+            color: #2196f3; /* Stronger blue text */
+            font-weight: 500;
+            white-space: pre-wrap;
+            overflow-wrap: break-word;
+            line-height: 1.6;
+        }
+        .llm-response strong {
+            color: #1976d2;
+        }
+        .loading-indicator {
+            display: none;
+            margin-top: 15px;
+            color: #64748b;
+            font-style: italic;
+            text-align: center;
+            font-size: 0.95rem;
+        }
+        .loading-indicator.active {
+            display: block;
+        }
+
+        /* Overdue Reminder Specific Styles */
+        .overdue-reminder {
+            background-color: #fff0f0; /* Very light red for overdue */
+            border-color: #ef4444; /* Stronger red border */
+            color: #b91c1c; /* Darker red text */
+            box-shadow: 0 5px 15px rgba(239, 68, 68, 0.1); /* Reddish shadow */
+        }
+        .overdue-reminder strong {
+             color: #dc2626; /* Even darker red for strong text */
+        }
+        .overdue-reminder .action-button {
+            background-color: #e53e3e; /* Red button for overdue actions */
+            color: white;
+        }
+        .overdue-reminder .action-button:hover {
+            background-color: #c53030;
+        }
+        .message-output-container {
+            margin-top: 30px;
+            padding-top: 20px;
+            border-top: 1px solid #e2e8f0;
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+            align-items: center;
+        }
+        .message-output-container p {
+            text-align: center;
+        }
+        .copy-button {
+            background-color: #22c55e; /* Green for copy button */
+            color: white;
+            font-size: 1rem;
+            padding: 10px 20px;
+            border-radius: 8px;
+            transition: background-color 0.3s ease, transform 0.2s ease;
+        }
+        .copy-button:hover {
+            background-color: #16a34a;
+            transform: translateY(-1px);
+        }
+        .copy-button:active {
+            transform: translateY(0);
+        }
+
+        /* Responsive Adjustments */
+        @media (max-width: 768px) {
+            body {
+                padding: 15px;
+            }
+            #app {
+                border-radius: 16px;
+            }
+            .header {
+                padding: 25px;
+                min-height: 180px;
+                border-radius: 16px 16px 0 0;
+            }
+            .header::before {
+                border-radius: 16px 16px 0 0;
+            }
+            .header h1 {
+                font-size: 2.5rem;
+            }
+            .header p {
+                font-size: 1.2rem;
+            }
+            .nav-container {
+                flex-direction: column; /* Stack buttons vertically on small screens */
+                align-items: stretch; /* Stretch buttons to full width */
+                padding: 10px;
+            }
+            .nav-button {
+                margin: 4px 0; /* Vertical margin between stacked buttons */
+                border-bottom: none; /* No bottom border for vertical nav */
+                border-right: none; /* No right border */
+            }
+            .nav-button.active {
+                border-bottom-color: transparent; /* Remove bottom border for active state */
+                background-color: #1a73e8; /* Keep blue for active */
+                color: white;
+            }
+            .section-content {
+                padding: 25px;
+            }
+            .section-content h2 {
+                font-size: 2rem;
+            }
+            .form-input, .form-textarea, .form-select, .submit-button, .llm-button {
+                padding: 12px 15px;
+                font-size: 1rem;
+            }
+            .button-group {
+                flex-direction: column;
+                gap: 10px;
+            }
+            .data-item {
+                padding: 18px 20px;
+                margin-bottom: 15px;
+            }
+            .data-item h4 {
+                font-size: 1.2rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div id="app">
+        <!-- Header Section -->
+        <div class="header">
+            <!-- Logo will be placed here -->
+            <img src="https://i.ibb.co/g2B7wSR/IMG-20250607-WA0098.jpg" alt="Up Car Logo" class="h-24 w-24 object-cover">
+            <h1>Up Car</h1>
+            <p>Sua Oficina Mecânica de Confiança</p>
+        </div>
+
+        <!-- Navigation -->
+        <nav class="nav-container">
+            <button id="navHome" class="nav-button active" onclick="showSection('home')">
+                <i data-lucide="home" class="w-5 h-5"></i> Início
+            </button>
+            <button id="navNovidades" class="nav-button" onclick="showSection('novidades')">
+                <i data-lucide="newspaper" class="w-5 h-5"></i> Novidades
+            </button>
+            <button id="navAgendamentos" class="nav-button" onclick="showSection('agendamentos')">
+                <i data-lucide="calendar" class="w-5 h-5"></i> Agendamentos
+            </button>
+            <button id="navVendas" class="nav-button" onclick="showSection('vendas')">
+                <i data-lucide="tag" class="w-5 h-5"></i> Vendas de Peças
+            </button>
+            <button id="navLembretesManutencao" class="nav-button" onclick="showSection('lembretesManutencao')">
+                <i data-lucide="bell" class="w-5 h-5"></i> Lembretes
+            </button>
+        </nav>
+
+        <!-- Home Section -->
+        <div id="home" class="section-content active">
+            <h2 class="text-3xl font-semibold text-gray-800 mb-6">Bem-vindo à Up Car!</h2>
+            <p class="text-gray-700 leading-relaxed text-lg">
+                Na Up Car, cuidamos do seu veículo com a máxima atenção e profissionalismo.
+                Oferecemos uma ampla gama de serviços de manutenção e reparo, além de peças de qualidade
+                para garantir o melhor desempenho e segurança do seu carro.
+            </p>
+            <p class="text-gray-700 leading-relaxed text-lg mt-4">
+                Utilize as abas acima para agendar um serviço ou consultar nossas peças disponíveis.
+            </p>
+            <div class="mt-8 grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div class="bg-blue-50 p-6 rounded-lg shadow-sm flex items-center gap-4">
+                    <i data-lucide="wrench" class="w-12 h-12 text-blue-600"></i>
+                    <div>
+                        <h3 class="font-bold text-xl text-blue-800">Serviços de Qualidade</h3>
+                        <p class="text-gray-600">Desde revisões básicas a reparos complexos.</p>
+                    </div>
+                </div>
+                <div class="bg-green-50 p-6 rounded-lg shadow-sm flex items-center gap-4">
+                    <i data-lucide="car" class="w-12 h-12 text-green-600"></i>
+                    <div>
+                        <h3 class="font-bold text-xl text-green-800">Peças Genuínas</h3>
+                        <p class="text-gray-600">Peças originais para o seu veículo.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Novidades Section -->
+        <div id="novidades" class="section-content">
+            <h2 class="text-3xl font-semibold text-gray-800 mb-6">Publicar Novidade</h2>
+
+            <form id="newPostForm" class="form-container mb-8">
+                <div class="mb-4">
+                    <label for="postTitle" class="form-label">Título da Novidade:</label>
+                    <input type="text" id="postTitle" class="form-input" required>
+                </div>
+                <div class="mb-6">
+                    <label for="postContent" class="form-label">Conteúdo da Novidade:</label>
+                    <textarea id="postContent" class="form-textarea" rows="6" required></textarea>
+                </div>
+                <div class="flex flex-col md:flex-row gap-4 button-group">
+                    <button type="submit" class="submit-button flex-grow">
+                        <i data-lucide="send" class="w-6 h-6 inline-block mr-2"></i> Publicar
+                    </button>
+                    <button type="button" id="generatePostContentButton" class="llm-button bg-green-600 hover:bg-green-700 flex-grow">
+                        <i data-lucide="sparkles" class="w-6 h-6 inline-block mr-2"></i> Gerar Conteúdo de Notícia ✨
+                    </button>
+                </div>
+                <div id="generatedPostContent" class="llm-response hidden mt-4"></div>
+                <div id="generatingPostIndicator" class="loading-indicator">A gerar conteúdo da notícia...</div>
+            </form>
+
+            <h3 class="text-2xl font-semibold text-gray-800 mt-8 mb-4">Feed de Novidades</h3>
+            <div id="postsList" class="data-list">
+                <p class="no-data-message">Nenhuma novidade publicada ainda.</p>
+            </div>
+        </div>
+
+        <!-- Agendamentos Section -->
+        <div id="agendamentos" class="section-content">
+            <h2 class="text-3xl font-semibold text-gray-800 mb-6">Agendar Serviço</h2>
+
+            <form id="agendamentoForm" class="form-container">
+                <div class="mb-4">
+                    <label for="clienteNome" class="form-label">Nome do Cliente:</label>
+                    <input type="text" id="clienteNome" class="form-input" required>
+                </div>
+                <div class="mb-4">
+                    <label for="veiculoModelo" class="form-label">Modelo do Veículo:</label>
+                    <input type="text" id="veiculoModelo" class="form-input" required>
+                </div>
+                <div class="mb-4">
+                    <label for="dataAgendamento" class="form-label">Data:</label>
+                    <input type="date" id="dataAgendamento" class="form-input" required>
+                </div>
+                <div class="mb-4">
+                    <label for="horaAgendamento" class="form-label">Hora:</label>
+                    <input type="time" id="horaAgendamento" class="form-input" required>
+                </div>
+                <div class="mb-4">
+                    <label for="tipoServico" class="form-label">Tipo de Serviço:</label>
+                    <select id="tipoServico" class="form-select" required>
+                        <option value="">Selecione um serviço</option>
+                        <option value="Revisão Periódica">Revisão Periódica</option>
+                        <option value="Troca de Óleo">Troca de Óleo</option>
+                        <option value="Freios">Freios</option>
+                        <option value="Suspensão">Suspensão</option>
+                        <option value="Elétrica">Elétrica</option>
+                        <option value="Outro">Outro</option>
+                    </select>
+                </div>
+                <div class="mb-6">
+                    <label for="descricaoAgendamento" class="form-label">Descrição do Problema/Serviço:</label>
+                    <textarea id="descricaoAgendamento" class="form-textarea" rows="4"></textarea>
+                </div>
+                <div class="flex flex-col md:flex-row gap-4 button-group">
+                    <button type="submit" class="submit-button flex-grow">
+                        <i data-lucide="plus-circle" class="w-6 h-6 inline-block mr-2"></i> Agendar
+                    </button>
+                    <button type="button" id="getSuggestionButton" class="llm-button bg-purple-600 hover:bg-purple-700 flex-grow">
+                        <i data-lucide="lightbulb" class="w-6 h-6 inline-block mr-2"></i> Obter Sugestão ✨
+                    </button>
+                </div>
+                <div id="llmResponse" class="llm-response hidden mt-4"></div>
+                <div id="loadingIndicator" class="loading-indicator">A gerar sugestão...</div>
+            </form>
+
+            <h3 class="text-2xl font-semibold text-gray-800 mt-8 mb-4">Agendamentos Existentes</h3>
+            <div id="agendamentosList" class="data-list">
+                <p class="no-data-message">Nenhum agendamento encontrado.</p>
+            </div>
+        </div>
+
+        <!-- Vendas de Peças Section -->
+        <div id="vendas" class="section-content">
+            <h2 class="text-3xl font-semibold text-gray-800 mb-6">Registrar Venda de Peça</h2>
+
+            <form id="vendaForm" class="form-container">
+                <div class="mb-4">
+                    <label for="nomePeca" class="form-label">Nome da Peça:</label>
+                    <input type="text" id="nomePeca" class="form-input" required>
+                </div>
+                <div class="mb-4">
+                    <label for="quantidadePeca" class="form-label">Quantidade:</label>
+                    <input type="number" id="quantidadePeca" class="form-input" min="1" value="1" required>
+                </div>
+                <div class="mb-6">
+                    <label for="precoPeca" class="form-label">Preço Unitário (R$):</label>
+                    <input type="number" id="precoPeca" class="form-input" step="0.01" min="0" required>
+                </div>
+                <div class="flex flex-col md:flex-row gap-4 button-group">
+                    <button type="submit" class="submit-button flex-grow">
+                        <i data-lucide="shopping-cart" class="w-6 h-6 inline-block mr-2"></i> Registrar Venda
+                    </button>
+                    <button type="button" id="getRelatedPartsButton" class="llm-button bg-orange-600 hover:bg-orange-700 flex-grow">
+                        <i data-lucide="package-search" class="w-6 h-6 inline-block mr-2"></i> Sugestão de Peças Relacionadas ✨
+                    </button>
+                </div>
+                <div id="relatedPartsResponse" class="llm-response hidden mt-4"></div>
+                <div id="relatedPartsLoadingIndicator" class="loading-indicator">A procurar peças relacionadas...</div>
+            </form>
+
+            <h3 class="text-2xl font-semibold text-gray-800 mt-8 mb-4">Vendas Registradas</h3>
+            <div id="vendasList" class="data-list">
+                <p class="no-data-message">Nenhuma venda encontrada.</p>
+            </div>
+        </div>
+
+        <!-- Lembretes de Manutenção Section -->
+        <div id="lembretesManutencao" class="section-content">
+            <h2 class="text-3xl font-semibold text-gray-800 mb-6">Registar Serviço Concluído para Lembrete</h2>
+
+            <form id="completedServiceForm" class="form-container mb-8">
+                <div class="mb-4">
+                    <label for="serviceClienteNome" class="form-label">Nome do Cliente:</label>
+                    <input type="text" id="serviceClienteNome" class="form-input" required>
+                </div>
+                <div class="mb-4">
+                    <label for="serviceVeiculoModelo" class="form-label">Modelo do Veículo:</label>
+                    <input type="text" id="serviceVeiculoModelo" class="form-input" required>
+                </div>
+                <div class="mb-4">
+                    <label for="serviceTipo" class="form-label">Tipo de Serviço:</label>
+                    <select id="serviceTipo" class="form-select" required>
+                        <option value="">Selecione o tipo de serviço</option>
+                        <option value="Troca de Óleo">Troca de Óleo</option>
+                        <option value="Balanceamento">Balanceamento</option>
+                    </select>
+                </div>
+                <div class="mb-6">
+                    <label for="serviceData" class="form-label">Data da Realização do Serviço:</label>
+                    <input type="date" id="serviceData" class="form-input" required>
+                </div>
+                <button type="submit" class="submit-button">
+                    <i data-lucide="check-circle" class="w-6 h-6 inline-block mr-2"></i> Registar Serviço
+                </button>
+            </form>
+
+            <h3 class="text-2xl font-semibold text-gray-800 mt-8 mb-4">Lembretes de Manutenção Programados</h3>
+            <div id="maintenanceRemindersList" class="data-list">
+                <p class="no-data-message">Nenhum lembrete de manutenção programado.</p>
+            </div>
+
+            <div id="messageOutputContainer" class="message-output-container hidden">
+                <div id="generatedMessageResponse" class="llm-response hidden"></div>
+                <div id="generatingMessageIndicator" class="loading-indicator">A gerar mensagem...</div>
+                <button id="copyMessageButton" class="copy-button hidden">
+                    <i data-lucide="copy" class="w-5 h-5 inline-block mr-2"></i> Copiar Mensagem
+                </button>
+            </div>
+        </div>
+
+    </div>
+
+    <script>
+        // Initialize Lucide icons
+        document.addEventListener('DOMContentLoaded', () => {
+            lucide.createIcons();
+            loadAgendamentos();
+            loadVendas();
+            loadPosts();
+            loadMaintenanceReminders(); // Carregar lembretes ao iniciar
+        });
+
+        // Function to show a specific section and update navigation buttons
+        function showSection(sectionId) {
+            // Hide all sections
+            document.querySelectorAll('.section-content').forEach(section => {
+                section.classList.remove('active');
+            });
+            // Deactivate all navigation buttons
+            document.querySelectorAll('.nav-button').forEach(button => {
+                button.classList.remove('active');
+            });
+
+            // Show the target section
+            document.getElementById(sectionId).classList.add('active');
+            // Activate the corresponding navigation button
+            document.getElementById(`nav${capitalizeFirstLetter(sectionId)}`).classList.add('active');
+
+            // Hide messaging related outputs when switching sections
+            document.getElementById('messageOutputContainer').classList.add('hidden');
+            document.getElementById('generatedMessageResponse').classList.add('hidden');
+            document.getElementById('generatingMessageIndicator').classList.add('hidden');
+            document.getElementById('copyMessageButton').classList.add('hidden');
+        }
+
+        // Helper function to capitalize the first letter for nav button IDs
+        function capitalizeFirstLetter(string) {
+            return string.charAt(0).toUpperCase() + string.slice(1);
+        }
+
+        // Helper function to add months to a date
+        function addMonths(date, months) {
+            const d = new Date(date);
+            d.setMonth(d.getMonth() + months);
+            return d.toISOString().split('T')[0]; // Format to YYYY-MM-DD
+        }
+
+        // --- Agendamentos Logic ---
+        const agendamentoForm = document.getElementById('agendamentoForm');
+        const agendamentosList = document.getElementById('agendamentosList');
+        const getSuggestionButton = document.getElementById('getSuggestionButton');
+        const llmResponseDiv = document.getElementById('llmResponse');
+        const loadingIndicator = document.getElementById('loadingIndicator');
+
+        let agendamentos = JSON.parse(localStorage.getItem('agendamentos')) || [];
+
+        agendamentoForm.addEventListener('submit', (e) => {
+            e.preventDefault();
+            const clienteNome = document.getElementById('clienteNome').value;
+            const veiculoModelo = document.getElementById('veiculoModelo').value;
+            const dataAgendamento = document.getElementById('dataAgendamento').value;
+            const horaAgendamento = document.getElementById('horaAgendamento').value;
+            const tipoServico = document.getElementById('tipoServico').value;
+            const descricaoAgendamento = document.getElementById('descricaoAgendamento').value;
+
+            const novoAgendamento = {
+                id: Date.now(), // Unique ID
+                clienteNome,
+                veiculoModelo,
+                dataAgendamento,
+                horaAgendamento,
+                tipoServico,
+                descricaoAgendamento
+            };
+
+            agendamentos.push(novoAgendamento);
+            localStorage.setItem('agendamentos', JSON.stringify(agendamentos));
+            renderAgendamentos();
+            agendamentoForm.reset(); // Clear the form
+            llmResponseDiv.classList.add('hidden'); // Hide previous LLM response
+            llmResponseDiv.innerHTML = '';
+        });
+
+        getSuggestionButton.addEventListener('click', async () => {
+            const descricao = document.getElementById('descricaoAgendamento').value;
+            if (!descricao) {
+                llmResponseDiv.classList.remove('hidden');
+                llmResponseDiv.innerHTML = 'Por favor, digite uma descrição do problema para obter uma sugestão.';
+                return;
+            }
+
+            llmResponseDiv.classList.add('hidden'); // Hide previous response
+            llmResponseDiv.innerHTML = '';
+            loadingIndicator.classList.add('active'); // Show loading indicator
+
+            try {
+                // LLM API call
+                let chatHistory = [];
+                const prompt = `Dado o seguinte problema descrito pelo cliente para um agendamento na oficina: '${descricao}', por favor, sugira possíveis diagnósticos ou serviços automotivos recomendados. Responda de forma concisa e profissional.`;
+                chatHistory.push({ role: "user", parts: [{ text: prompt }] });
+
+                const payload = { contents: chatHistory };
+                const apiKey = ""; // Canvas will automatically provide the API key
+                const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${apiKey}`;
+
+                const response = await fetch(apiUrl, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(payload)
+                });
+
+                const result = await response.json();
+                
+                if (result.candidates && result.candidates.length > 0 &&
+                    result.candidates[0].content && result.candidates[0].content.parts &&
+                    result.candidates[0].content.parts.length > 0) {
+                    const text = result.candidates[0].content.parts[0].text;
+                    llmResponseDiv.innerHTML = `<p><strong>Sugestão do Gemini:</strong></p><p>${text}</p>`;
+                } else {
+                    llmResponseDiv.innerHTML = 'Não foi possível gerar uma sugestão. Tente novamente.';
+                }
+                llmResponseDiv.classList.remove('hidden');
+            } catch (error) {
+                console.error('Erro ao chamar a API do Gemini:', error);
+                llmResponseDiv.classList.remove('hidden');
+                llmResponseDiv.innerHTML = 'Ocorreu um erro ao gerar a sugestão. Por favor, tente novamente mais tarde.';
+            } finally {
+                loadingIndicator.classList.remove('active'); // Hide loading indicator
+            }
+        });
+
+        function renderAgendamentos() {
+            agendamentosList.innerHTML = ''; // Clear current list
+
+            if (agendamentos.length === 0) {
+                agendamentosList.innerHTML = '<p class="no-data-message">Nenhum agendamento encontrado.</p>';
+                return;
+            }
+
+            agendamentos.forEach(agendamento => {
+                const item = document.createElement('div');
+                item.classList.add('data-item');
+                item.innerHTML = `
+                    <p><strong>Cliente:</strong> ${agendamento.clienteNome}</p>
+                    <p><strong>Veículo:</strong> ${agendamento.veiculoModelo}</p>
+                    <p><strong>Data:</strong> ${agendamento.dataAgendamento}</p>
+                    <p><strong>Hora:</strong> ${agendamento.horaAgendamento}</p>
+                    <p><strong>Serviço:</strong> ${agendamento.tipoServico}</p>
+                    <p><strong>Descrição:</strong> ${agendamento.descricaoAgendamento || 'N/A'}</p>
+                    <button class="text-red-600 hover:text-red-800 mt-2 self-end" onclick="deleteAgendamento(${agendamento.id})">
+                        <i data-lucide="trash-2" class="w-5 h-5 inline-block mr-1"></i> Excluir
+                    </button>
+                `;
+                agendamentosList.appendChild(item);
+            });
+            lucide.createIcons(); // Renderizar novamente os ícones após adicionar novos elementos
+        }
+
+        function deleteAgendamento(id) {
+            agendamentos = agendamentos.filter(agendamento => agendamento.id !== id);
+            localStorage.setItem('agendamentos', JSON.stringify(agendamentos));
+            renderAgendamentos();
+        }
+
+        function loadAgendamentos() {
+            renderAgendamentos();
+        }
+
+        // --- Vendas Logic ---
+        const vendaForm = document.getElementById('vendaForm');
+        const vendasList = document.getElementById('vendasList');
+        const getRelatedPartsButton = document.getElementById('getRelatedPartsButton');
+        const relatedPartsResponseDiv = document.getElementById('relatedPartsResponse');
+        const relatedPartsLoadingIndicator = document.getElementById('relatedPartsLoadingIndicator');
+
+        let vendas = JSON.parse(localStorage.getItem('vendas')) || [];
+
+        vendaForm.addEventListener('submit', (e) => {
+            e.preventDefault();
+            const nomePeca = document.getElementById('nomePeca').value;
+            const quantidadePeca = parseInt(document.getElementById('quantidadePeca').value);
+            const precoPeca = parseFloat(document.getElementById('precoPeca').value).toFixed(2);
+            const dataVenda = new Date().toLocaleDateString('pt-BR');
+
+            const novaVenda = {
+                id: Date.now(), // Unique ID
+                nomePeca,
+                quantidadePeca,
+                precoPeca,
+                total: (quantidadePeca * precoPeca).toFixed(2),
+                dataVenda
+            };
+
+            vendas.push(novaVenda);
+            localStorage.setItem('vendas', JSON.stringify(vendas));
+            renderVendas();
+            vendaForm.reset(); // Clear the form
+            relatedPartsResponseDiv.classList.add('hidden'); // Hide previous LLM response
+            relatedPartsResponseDiv.innerHTML = '';
+        });
+
+        getRelatedPartsButton.addEventListener('click', async () => {
+            const nomePeca = document.getElementById('nomePeca').value;
+            if (!nomePeca) {
+                relatedPartsResponseDiv.classList.remove('hidden');
+                relatedPartsResponseDiv.innerHTML = 'Por favor, digite o nome da peça para obter sugestões relacionadas.';
+                return;
+            }
+
+            relatedPartsResponseDiv.classList.add('hidden'); // Hide previous response
+            relatedPartsResponseDiv.innerHTML = '';
+            relatedPartsLoadingIndicator.classList.add('active'); // Show loading indicator
+
+            try {
+                // LLM API call for pieces related
+                let chatHistory = [];
+                const prompt = `Dado o nome de uma peça de carro: '${nomePeca}', por favor, sugira 3 a 5 peças automotivas relacionadas que podem ser necessárias ou que são comumente compradas em conjunto para manutenção ou reparos. Liste-as de forma concisa.`;
+                chatHistory.push({ role: "user", parts: [{ text: prompt }] });
+
+                const payload = { contents: chatHistory };
+                const apiKey = ""; // Canvas will automatically provide the API key
+                const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${apiKey}`;
+
+                const response = await fetch(apiUrl, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(payload)
+                });
+
+                const result = await response.json();
+                
+                if (result.candidates && result.candidates.length > 0 &&
+                    result.candidates[0].content && result.candidates[0].content.parts &&
+                    result.candidates[0].content.parts.length > 0) {
+                    const text = result.candidates[0].content.parts[0].text;
+                    relatedPartsResponseDiv.innerHTML = `<p><strong>Sugestões de Peças Relacionadas do Gemini:</strong></p><p>${text}</p>`;
+                } else {
+                    relatedPartsResponseDiv.innerHTML = 'Não foi possível gerar sugestões de peças relacionadas. Tente novamente.';
+                }
+                relatedPartsResponseDiv.classList.remove('hidden');
+            } catch (error) {
+                console.error('Erro ao chamar a API do Gemini para peças relacionadas:', error);
+                relatedPartsResponseDiv.classList.remove('hidden');
+                relatedPartsResponseDiv.innerHTML = 'Ocorreu um erro ao gerar sugestões de peças. Por favor, tente novamente mais tarde.';
+            } finally {
+                relatedPartsLoadingIndicator.classList.remove('active'); // Hide loading indicator
+            }
+        });
+
+        function renderVendas() {
+            vendasList.innerHTML = ''; // Clear current list
+
+            if (vendas.length === 0) {
+                vendasList.innerHTML = '<p class="no-data-message">Nenhuma venda encontrada.</p>';
+                return;
+            }
+
+            vendas.forEach(venda => {
+                const item = document.createElement('div');
+                item.classList.add('data-item');
+                item.innerHTML = `
+                    <p><strong>Peça:</strong> ${venda.nomePeca}</p>
+                    <p><strong>Quantidade:</strong> ${venda.quantidadePeca}</p>
+                    <p><strong>Preço Unitário:</strong> R$ ${venda.precoPeca}</p>
+                    <p><strong>Total:</strong> R$ ${venda.total}</p>
+                    <p><strong>Data da Venda:</strong> ${venda.dataVenda}</p>
+                    <button class="text-red-600 hover:text-red-800 mt-2 self-end" onclick="deleteVenda(${venda.id})">
+                        <i data-lucide="trash-2" class="w-5 h-5 inline-block mr-1"></i> Excluir
+                    </button>
+                `;
+                vendasList.appendChild(item);
+            });
+            lucide.createIcons(); // Renderizar novamente os ícones após adicionar novos elementos
+        }
+
+        function deleteVenda(id) {
+            vendas = vendas.filter(venda => venda.id !== id);
+            localStorage.setItem('vendas', JSON.stringify(vendas));
+            renderVendas();
+        }
+
+        function loadVendas() {
+            renderVendas();
+        }
+
+        // --- Novidades Logic ---
+        const newPostForm = document.getElementById('newPostForm');
+        const postsList = document.getElementById('postsList');
+        const generatePostContentButton = document.getElementById('generatePostContentButton');
+        const generatedPostContentDiv = document.getElementById('generatedPostContent');
+        const generatingPostIndicator = document.getElementById('generatingPostIndicator');
+        const postContentTextarea = document.getElementById('postContent'); // Get the textarea
+
+        let posts = JSON.parse(localStorage.getItem('posts')) || [];
+
+        newPostForm.addEventListener('submit', (e) => {
+            e.preventDefault();
+            const postTitle = document.getElementById('postTitle').value;
+            const postContent = document.getElementById('postContent').value;
+            const postDate = new Date().toLocaleString('pt-BR', { dateStyle: 'medium', timeStyle: 'short' });
+
+            const newPost = {
+                id: Date.now(),
+                title: postTitle,
+                content: postContent,
+                date: postDate
+            };
+
+            posts.unshift(newPost); // Add new post to the beginning
+            localStorage.setItem('posts', JSON.stringify(posts));
+            renderPosts();
+            newPostForm.reset();
+            generatedPostContentDiv.classList.add('hidden'); // Hide previous generated content
+            generatedPostContentDiv.innerHTML = '';
+        });
+
+        generatePostContentButton.addEventListener('click', async () => {
+            const postTitle = document.getElementById('postTitle').value;
+            if (!postTitle) {
+                generatedPostContentDiv.classList.remove('hidden');
+                generatedPostContentDiv.innerHTML = 'Por favor, insira um título para a notícia para gerar conteúdo.';
+                return;
+            }
+
+            generatedPostContentDiv.classList.add('hidden'); // Hide previous response
+            generatedPostContentDiv.innerHTML = '';
+            generatingPostIndicator.classList.add('active'); // Show loading indicator
+
+            try {
+                // LLM API call for generating post content
+                let chatHistory = [];
+                const prompt = `Gere o conteúdo de uma publicação para redes sociais para uma oficina mecânica. O título da publicação é: '${postTitle}'. O conteúdo deve ser atrativo, informativo e incentivar o envolvimento do cliente. Inclua um apelo à ação se for uma promoção ou dica. Mantenha a resposta concisa e formatada como texto para uma publicação.`;
+                chatHistory.push({ role: "user", parts: [{ text: prompt }] });
+
+                const payload = { contents: chatHistory };
+                const apiKey = ""; // Canvas will automatically provide the API key
+                const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${apiKey}`;
+
+                const response = await fetch(apiUrl, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(payload)
+                });
+
+                const result = await response.json();
+                
+                if (result.candidates && result.candidates.length > 0 &&
+                    result.candidates[0].content && result.candidates[0].content.parts &&
+                    result.candidates[0].content.parts.length > 0) {
+                    const text = result.candidates[0].content.parts[0].text;
+                    postContentTextarea.value = text; // Populate the textarea with generated content
+                    generatedPostContentDiv.innerHTML = `<p><strong>Conteúdo Gerado pelo Gemini:</strong></p><p>${text}</p>`;
+                } else {
+                    generatedPostContentDiv.innerHTML = 'Não foi possível gerar o conteúdo da notícia. Tente novamente.';
+                }
+                generatedPostContentDiv.classList.remove('hidden');
+            } catch (error) {
+                console.error('Erro ao chamar a API do Gemini para gerar conteúdo de notícia:', error);
+                generatedPostContentDiv.classList.remove('hidden');
+                generatedPostContentDiv.innerHTML = 'Ocorreu um erro ao gerar o conteúdo. Por favor, tente novamente mais tarde.';
+            } finally {
+                generatingPostIndicator.classList.remove('active'); // Hide loading indicator
+            }
+        });
+
+
+        function renderPosts() {
+            postsList.innerHTML = ''; // Limpar a lista atual
+
+            if (posts.length === 0) {
+                postsList.innerHTML = '<p class="no-data-message">Nenhuma novidade publicada ainda.</p>';
+                return;
+            }
+
+            posts.forEach(post => {
+                const item = document.createElement('div');
+                item.classList.add('data-item'); // Reutilizar estilo existente de data-item
+                item.innerHTML = `
+                    <h4 class="text-xl font-semibold text-gray-900">${post.title}</h4>
+                    <p class="text-gray-700 mt-1">${post.content}</p>
+                    <p class="text-gray-500 text-sm mt-2">Publicado em: ${post.date}</p>
+                    <button class="text-red-600 hover:text-red-800 mt-2 self-end" onclick="deletePost(${post.id})">
+                        <i data-lucide="trash-2" class="w-5 h-5 inline-block mr-1"></i> Excluir
+                    </button>
+                `;
+                postsList.appendChild(item);
+            });
+            lucide.createIcons();
+        }
+
+        function deletePost(id) {
+            posts = posts.filter(post => post.id !== id);
+            localStorage.setItem('posts', JSON.stringify(posts));
+            renderPosts();
+        }
+
+        function loadPosts() {
+            renderPosts();
+        }
+
+        // --- Lembretes de Manutenção Logic ---
+        const completedServiceForm = document.getElementById('completedServiceForm');
+        const maintenanceRemindersList = document.getElementById('maintenanceRemindersList');
+        const messageOutputContainer = document.getElementById('messageOutputContainer');
+        const generatedMessageResponseDiv = document.getElementById('generatedMessageResponse');
+        const generatingMessageIndicatorDiv = document.getElementById('generatingMessageIndicator');
+        const copyMessageButton = document.getElementById('copyMessageButton');
+
+        let maintenanceReminders = JSON.parse(localStorage.getItem('maintenanceReminders')) || [];
+
+        completedServiceForm.addEventListener('submit', (e) => {
+            e.preventDefault();
+            const customerName = document.getElementById('serviceClienteNome').value;
+            const vehicleModel = document.getElementById('serviceVeiculoModelo').value;
+            const serviceType = document.getElementById('serviceTipo').value;
+            const serviceData = document.getElementById('serviceData').value;
+
+            let nextReminderDate;
+            if (serviceType === 'Troca de Óleo') {
+                nextReminderDate = addMonths(serviceData, 6);
+            } else if (serviceType === 'Balanceamento') {
+                nextReminderDate = addMonths(serviceData, 3);
+            } else {
+                return; // Should not happen with current select options
+            }
+
+            // Create a unique key for the reminder to update existing ones
+            const reminderKey = `${customerName}-${vehicleModel}-${serviceType}`;
+
+            // Remove existing reminder for this customer/vehicle/serviceType, if any
+            maintenanceReminders = maintenanceReminders.filter(
+                reminder => !(reminder.customerName === customerName &&
+                              reminder.vehicleModel === vehicleModel &&
+                              reminder.reminderType === serviceType)
+            );
+
+            // Add the new/updated reminder
+            const newReminder = {
+                id: Date.now(), // Unique ID for this reminder instance
+                customerName,
+                vehicleModel,
+                reminderType: serviceType,
+                nextReminderDate,
+                lastServiceDate: serviceData,
+                key: reminderKey // Store key for easy lookup/removal
+            };
+            maintenanceReminders.push(newReminder);
+
+            localStorage.setItem('maintenanceReminders', JSON.stringify(maintenanceReminders));
+            renderMaintenanceReminders();
+            completedServiceForm.reset(); // Clear the form
+
+            // Hide messaging related outputs after new registration
+            messageOutputContainer.classList.add('hidden');
+            generatedMessageResponseDiv.classList.add('hidden');
+            generatingMessageIndicatorDiv.classList.add('hidden');
+            copyMessageButton.classList.add('hidden');
+        });
+
+        async function contactClient(reminder) {
+            messageOutputContainer.classList.add('hidden');
+            generatedMessageResponseDiv.classList.add('hidden');
+            copyMessageButton.classList.add('hidden');
+            generatingMessageIndicatorDiv.classList.remove('hidden');
+            messageOutputContainer.classList.remove('hidden'); // Show container
+
+            try {
+                let chatHistory = [];
+                const prompt = `Gere uma mensagem amigável e profissional para um cliente, lembrando-o da ${reminder.reminderType} para o veículo ${reminder.vehicleModel}. O último serviço foi em ${reminder.lastServiceDate} e a próxima manutenção recomendada é em ${reminder.nextReminderDate}. Inclua um apelo à ação para agendar o serviço. O nome do cliente é ${reminder.customerName}. Mantenha a mensagem concisa e pronta para ser enviada via WhatsApp/SMS.`;
+                chatHistory.push({ role: "user", parts: [{ text: prompt }] });
+
+                const payload = { contents: chatHistory };
+                const apiKey = ""; // Canvas will automatically provide the API key
+                const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${apiKey}`;
+
+                const response = await fetch(apiUrl, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(payload)
+                });
+
+                const result = await response.json();
+
+                if (result.candidates && result.candidates.length > 0 &&
+                    result.candidates[0].content && result.candidates[0].content.parts &&
+                    result.candidates[0].content.parts.length > 0) {
+                    const text = result.candidates[0].content.parts[0].text;
+                    generatedMessageResponseDiv.innerHTML = `<p><strong>Mensagem Sugerida:</strong></p><p>${text}</p>`;
+                    generatedMessageResponseDiv.dataset.message = text; // Store message for copying
+                    generatedMessageResponseDiv.classList.remove('hidden');
+                    copyMessageButton.classList.remove('hidden');
+                } else {
+                    generatedMessageResponseDiv.innerHTML = 'Não foi possível gerar a mensagem. Tente novamente.';
+                    generatedMessageResponseDiv.classList.remove('hidden');
+                }
+            } catch (error) {
+                console.error('Erro ao chamar a API do Gemini para gerar mensagem:', error);
+                generatedMessageResponseDiv.classList.remove('hidden');
+                generatedMessageResponseDiv.innerHTML = 'Ocorreu um erro ao gerar a mensagem. Por favor, tente novamente mais tarde.';
+            } finally {
+                generatingMessageIndicatorDiv.classList.add('hidden');
+            }
+        }
+
+        copyMessageButton.addEventListener('click', () => {
+            const messageToCopy = generatedMessageResponseDiv.dataset.message;
+            if (messageToCopy) {
+                // Use document.execCommand('copy') as navigator.clipboard.writeText() might not work in iframes
+                const textarea = document.createElement('textarea');
+                textarea.value = messageToCopy;
+                textarea.style.position = 'fixed'; // Prevent scrolling to bottom
+                textarea.style.left = '-9999px'; // Move out of screen
+                document.body.appendChild(textarea);
+                textarea.select();
+                try {
+                    document.execCommand('copy');
+                    alert('Mensagem copiada para a área de transferência!');
+                } catch (err) {
+                    console.error('Erro ao copiar a mensagem: ', err);
+                    alert('Não foi possível copiar a mensagem automaticamente. Por favor, copie-a manualmente.');
+                }
+                document.body.removeChild(textarea);
+            }
+        });
+
+
+        function renderMaintenanceReminders() {
+            maintenanceRemindersList.innerHTML = ''; // Clear current list
+            const today = new Date().toISOString().split('T')[0]; // Get today's date in YYYY-MM-DD format
+
+            if (maintenanceReminders.length === 0) {
+                maintenanceRemindersList.innerHTML = '<p class="no-data-message">Nenhum lembrete de manutenção programado.</p>';
+                return;
+            }
+
+            // Sort reminders by date, overdue first
+            const sortedReminders = [...maintenanceReminders].sort((a, b) => {
+                const dateA = new Date(a.nextReminderDate);
+                const dateB = new Date(b.nextReminderDate);
+                return dateA - dateB;
+            });
+
+            sortedReminders.forEach(reminder => {
+                const item = document.createElement('div');
+                item.classList.add('data-item');
+
+                // Add overdue class if reminder date is in the past
+                if (new Date(reminder.nextReminderDate) < new Date(today)) {
+                    item.classList.add('overdue-reminder');
+                }
+
+                item.innerHTML = `
+                    <p><strong>Cliente:</strong> ${reminder.customerName}</p>
+                    <p><strong>Veículo:</strong> ${reminder.vehicleModel}</p>
+                    <p><strong>Serviço:</strong> ${reminder.reminderType}</p>
+                    <p><strong>Último Serviço:</strong> ${reminder.lastServiceDate}</p>
+                    <p><strong>Próximo Lembrete:</strong> ${reminder.nextReminderDate}</p>
+                    <div class="flex flex-col sm:flex-row justify-end gap-2 mt-3">
+                        <button class="action-button text-blue-600 hover:text-blue-800" onclick="contactClient(${JSON.stringify(reminder).replace(/"/g, '&quot;')})">
+                            <i data-lucide="send" class="w-4 h-4 inline-block mr-1"></i> Contactar Cliente
+                        </button>
+                        <button class="action-button text-red-600 hover:text-red-800" onclick="deleteReminder('${reminder.key}')">
+                            <i data-lucide="x-circle" class="w-4 h-4 inline-block mr-1"></i> Concluído
+                        </button>
+                    </div>
+                `;
+                maintenanceRemindersList.appendChild(item);
+            });
+            lucide.createIcons(); // Renderizar novamente os ícones após adicionar novos elementos
+        }
+
+        function deleteReminder(key) {
+            maintenanceReminders = maintenanceReminders.filter(reminder => reminder.key !== key);
+            localStorage.setItem('maintenanceReminders', JSON.stringify(maintenanceReminders));
+            renderMaintenanceReminders();
+        }
+
+        function loadMaintenanceReminders() {
+            renderMaintenanceReminders();
+        }
+
+        // Initial section display (Home)
+        showSection('home');
+    </script>
+</body>
+</html>
